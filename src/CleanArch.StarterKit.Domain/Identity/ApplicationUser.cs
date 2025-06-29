@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using CleanArch.StarterKit.Domain.Entities;
 
-namespace CleanArch.StarterKit.Infrastructure.Identity;
+namespace CleanArch.StarterKit.Domain.Identity;
 
-public class ApplicationRole : IdentityRole<Guid>, IUserAuditable
+public class ApplicationUser : IdentityUser<Guid>, IUserAuditable
 {
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }

@@ -1,7 +1,12 @@
 ﻿// /src/CleanArch.StarterKit.Application/DependencyInjection.cs
 
+using System.Text;
 using CleanArch.StarterKit.Application.Features.Auth;
+using CleanArch.StarterKit.Application.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArch.StarterKit.Application;
 
@@ -13,8 +18,7 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblyContaining<RegisterUserCommandHandler>());
 
- 
-
+        
 
         return services;
     }

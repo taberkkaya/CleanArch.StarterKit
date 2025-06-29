@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
+﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Domain.Identity;
 using CleanArch.StarterKit.Infrastructure.Persistence;
-using CleanArch.StarterKit.Infrastructure.Identity;
 using CleanArch.StarterKit.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArch.StarterKit.Infrastructure;
 
@@ -22,8 +23,7 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
-
-
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
 
         return services;
     }

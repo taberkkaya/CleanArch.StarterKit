@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using CleanArch.StarterKit.Domain.Entities;
-using CleanArch.StarterKit.Infrastructure.Identity;
+using CleanArch.StarterKit.Domain.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

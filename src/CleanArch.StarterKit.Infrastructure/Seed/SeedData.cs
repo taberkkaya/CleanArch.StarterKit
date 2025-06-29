@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using CleanArch.StarterKit.Infrastructure.Identity;
+﻿using CleanArch.StarterKit.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArch.StarterKit.Infrastructure.Seed;
 

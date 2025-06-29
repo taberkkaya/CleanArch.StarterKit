@@ -1,8 +1,7 @@
-﻿using CleanArch.StarterKit.Infrastructure.Identity;
+﻿using CleanArch.StarterKit.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using ResultKit;
-using Serilog;
 
 namespace CleanArch.StarterKit.Application.Features.Auth;
 public sealed record RegisterUserCommand(
@@ -36,8 +35,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
 
         if (!result.Succeeded)
             return Result<string>.ValidationFailure(result.Errors.Select(e => new ValidationError(e.Code, e.Description)));
-            Log.Error("Error while processing request for UserId: {UserId}", "system");
-
+  
         return "User registration completed successfully.";
     }
 }

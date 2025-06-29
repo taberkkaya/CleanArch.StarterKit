@@ -2,13 +2,13 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
     <PackageReference Include="ResultKit" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CleanArch.StarterKit.Domain\CleanArch.StarterKit.Domain.csproj" />
-    <ProjectReference Include="..\CleanArch.StarterKit.Infrastructure\CleanArch.StarterKit.Infrastructure.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

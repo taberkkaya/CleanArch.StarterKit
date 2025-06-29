@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CleanArch.StarterKit.Application\CleanArch.StarterKit.Application.csproj" />
     <ProjectReference Include="..\CleanArch.StarterKit.Domain\CleanArch.StarterKit.Domain.csproj" />
   </ItemGroup>
 
