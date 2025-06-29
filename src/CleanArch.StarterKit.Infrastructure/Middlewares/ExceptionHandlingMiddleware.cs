@@ -1,0 +1,44 @@
+﻿using System.Net;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Serilog;
+
+namespace CleanArch.StarterKit.Infrastructure.Middlewares;
+
+public class ExceptionHandlingMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandlingMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Unhandled exception occurred. Path: {Path}", context.Request.Path); // Serilog ile logla
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        var code = HttpStatusCode.InternalServerError;
+
+        var result = JsonSerializer.Serialize(new
+        {
+            error = "Internal server error.",
+            traceId = context.TraceIdentifier
+        });
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)code;
+        return context.Response.WriteAsync(result);
+    }
+}

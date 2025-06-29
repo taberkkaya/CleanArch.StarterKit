@@ -1,0 +1,101 @@
+## Build results
+bin/
+obj/
+out/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Visual Studio 2015/2017/2019/2022 cache/options directory
+.vs/
+.vscode/
+.vscode-test/
+
+# Rider
+.idea/
+*.sln.iml
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Others
+*.dbmdl
+*.dbmdl
+*.bak
+*.log
+*.pdb
+*.mdb
+*.svclog
+*.userprefs
+
+## Local history
+.localhistory/
+
+## SQL Server database files
+*.mdf
+*.ldf
+
+## IIS Express
+.vs/
+*.vspscc
+*.vssscc
+
+## DotCover
+*.dotCover
+
+## NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+
+## Node/JS
+node_modules/
+npm-debug.log
+yarn-error.log
+
+## Publish results
+publish/
+artifacts/
+
+## Secrets & sensitive files
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.user.json
+
+## Other IDEs
+*.swp
+*~
+.project
+.idea/
+
+# Mac & Linux
+.DS_Store
+*.swp
+
+# Nuget
+*.nupkg
+.nuget/
+packages/
+*.snupkg
+
+# Test results
+TestResults/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Python cache
+__pycache__/
+*.pyc
