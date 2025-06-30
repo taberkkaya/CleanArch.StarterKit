@@ -1,10 +1,13 @@
-﻿using System.Security.Claims;
+﻿using CleanArch.StarterKit.Application.Services;
 using CleanArch.StarterKit.Domain.Entities;
 using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Claims;
 
 namespace CleanArch.StarterKit.Infrastructure.Persistence;
 
@@ -20,16 +23,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         _httpContextAccessor = httpContextAccessor;
     }
 
-    // Henüz DbSet yok
+    //  DbSet 
+    public DbSet<AuditLog> AuditLogs { get; set; }
 
     public override int SaveChanges()
     {
+        AddAuditLogs();
         HandleAuditAndSoftDelete();
         return base.SaveChanges();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        AddAuditLogs();
         HandleAuditAndSoftDelete();
         return await base.SaveChangesAsync(cancellationToken);
     }
@@ -74,22 +80,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Ignore<IdentityRoleClaim<Guid>>();
         //builder.Ignore<IdentityUserRole<Guid>>();
 
-        builder.Entity<ApplicationUser>()
-       .HasMany(u => u.Roles)
-       .WithMany(r => r.Users)
-       .UsingEntity<IdentityUserRole<Guid>>(
-           // Ara varlık üzerinde Role yönlendirmesi
-           ur => ur.HasOne<ApplicationRole>()
-                   .WithMany()
-                   .HasForeignKey(ur => ur.RoleId)
-                   .IsRequired(),
-           // Ara varlık üzerinde User yönlendirmesi
-           ur => ur.HasOne<ApplicationUser>()
-                   .WithMany()
-                   .HasForeignKey(ur => ur.UserId)
-                   .IsRequired());
-
-
         // Audit/soft delete query filter
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
@@ -109,4 +99,48 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         builder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
     }
+
+    private void AddAuditLogs()
+    {
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
+        var userName = _httpContextAccessor.HttpContext?.User.Identity?.Name ?? "Anonymous";
+        var ip = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+
+        foreach (var entry in ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted).ToList())
+        {
+            // Sadece asıl entity'ler için (ör: audit log kaydının kendisi olmasın)
+            if (entry.Entity is AuditLog) continue;
+
+            var tableName = entry.Entity.GetType().Name;
+
+            string? oldValues = null, newValues = null;
+            if (entry.State == EntityState.Modified)
+            {
+                oldValues = System.Text.Json.JsonSerializer.Serialize(entry.OriginalValues.ToObject());
+                newValues = System.Text.Json.JsonSerializer.Serialize(entry.CurrentValues.ToObject());
+            }
+            else if (entry.State == EntityState.Added)
+            {
+                newValues = System.Text.Json.JsonSerializer.Serialize(entry.CurrentValues.ToObject());
+            }
+            else if (entry.State == EntityState.Deleted)
+            {
+                oldValues = System.Text.Json.JsonSerializer.Serialize(entry.OriginalValues.ToObject());
+            }
+
+            AuditLogs.Add(new AuditLog
+            {
+                UserId = userId,
+                UserName = userName,
+                IpAddress = ip,
+                Action = entry.State.ToString(),
+                TableName = tableName,
+                OldValues = oldValues,
+                NewValues = newValues,
+                Timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
 }

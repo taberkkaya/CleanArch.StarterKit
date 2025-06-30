@@ -1,9 +1,9 @@
-﻿using CleanArch.StarterKit.Application.Features.Users;
+﻿using CleanArch.StarterKit.Application.Features.Identity.Users;
 using CleanArch.StarterKit.WebApi.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArch.StarterKit.WebApi.Controllers;
+namespace CleanArch.StarterKit.WebApi.Controllers.Identity;
 
 public sealed class UsersController : ApiController
 {

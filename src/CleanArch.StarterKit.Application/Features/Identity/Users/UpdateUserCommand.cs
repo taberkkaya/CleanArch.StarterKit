@@ -1,10 +1,11 @@
-﻿using CleanArch.StarterKit.Domain.Identity;
+﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Domain.Identity;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using ResultKit;
 
-namespace CleanArch.StarterKit.Application.Features.Users;
+namespace CleanArch.StarterKit.Application.Features.Identity.Users;
 public sealed record UpdateUserCommand(
     Guid Id,
     string Email,
@@ -12,7 +13,8 @@ public sealed record UpdateUserCommand(
     ) : IRequest<Result<string>>;
 
 internal sealed class UpdateUserCommandHandler(
-    UserManager<ApplicationUser> userManager
+    UserManager<ApplicationUser> userManager,
+    ICacheService cacheService
     ) : IRequestHandler<UpdateUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,8 @@ internal sealed class UpdateUserCommandHandler(
         request.Adapt(user);
         
         await userManager.UpdateAsync(user);
+
+        cacheService.Remove("users");
 
         return "User updated done!";
     }

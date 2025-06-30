@@ -1,14 +1,16 @@
-﻿using CleanArch.StarterKit.Domain.Identity;
+﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Domain.Identity;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using ResultKit;
 
-namespace CleanArch.StarterKit.Application.Features.Roles;
+namespace CleanArch.StarterKit.Application.Features.Identity.Roles;
 public sealed record CreateRoleCommand(string Name) : IRequest<Result<string>>;
 
 internal sealed class CreateRoleCommandHandler(
-    RoleManager<ApplicationRole> roleManager
+    RoleManager<ApplicationRole> roleManager,
+    ICacheService cacheService
     ) : IRequestHandler<CreateRoleCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
@@ -20,6 +22,8 @@ internal sealed class CreateRoleCommandHandler(
         var role = request.Adapt<ApplicationRole>();
 
         await roleManager.CreateAsync(role);
+
+        cacheService.Remove("roles");
 
         return $"Role '{role.Name}' created successfully.";
     }

@@ -46,6 +46,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -96,8 +98,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandling();
+
+
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Sırası önemli!
 app.UseAuthorization();
+
+app.UseAuditLogging();
+
 app.MapControllers();
 app.Run();

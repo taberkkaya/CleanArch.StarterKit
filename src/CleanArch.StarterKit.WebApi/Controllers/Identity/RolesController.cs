@@ -1,9 +1,9 @@
-﻿using CleanArch.StarterKit.Application.Features.Roles;
+﻿using CleanArch.StarterKit.Application.Features.Identity.Roles;
 using CleanArch.StarterKit.WebApi.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArch.StarterKit.WebApi.Controllers;
+namespace CleanArch.StarterKit.WebApi.Controllers.Identity;
 
 public class RolesController : ApiController
 {

@@ -1,4 +1,5 @@
-﻿using CleanArch.StarterKit.Domain.Identity;
+﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Domain.Identity;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -9,14 +10,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArch.StarterKit.Application.Features.Roles;
+namespace CleanArch.StarterKit.Application.Features.Identity.Roles;
 public sealed record UpdateRoleCommand(
     Guid Id,
     string Name
     ) : IRequest<Result<string>>;
 
 internal sealed class UpdateRoleCommandHandler(
-    RoleManager<ApplicationRole> roleManager
+    RoleManager<ApplicationRole> roleManager,
+    ICacheService cacheService
     ) : IRequestHandler<UpdateRoleCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
@@ -29,6 +31,8 @@ internal sealed class UpdateRoleCommandHandler(
         request.Adapt(role);
 
         await roleManager.UpdateAsync(role);
+
+        cacheService.Remove("roles");
 
         return "Role updated";
     }

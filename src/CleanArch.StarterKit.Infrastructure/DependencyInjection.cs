@@ -22,8 +22,12 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddHttpContextAccessor();
+        services.AddMemoryCache();
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<ICacheService, MemoryCacheService>();
+        services.AddScoped<IEmailService, SmtpEmailService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
 
         return services;
     }
