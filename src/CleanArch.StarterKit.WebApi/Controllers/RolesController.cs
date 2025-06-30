@@ -1,15 +1,14 @@
 ﻿using CleanArch.StarterKit.Application.Features.Roles;
+using CleanArch.StarterKit.WebApi.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.StarterKit.WebApi.Controllers;
 
-public class RoleController : ControllerBase
+public class RolesController : ApiController
 {
-    private readonly IMediator _mediator;
-    public RoleController(IMediator mediator)
+    public RolesController(IMediator mediator) : base(mediator)
     {
-        _mediator = mediator;
     }
 
     [HttpPost]
@@ -21,6 +20,20 @@ public class RoleController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> GetAll(GetAllRolesQuery request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(request, cancellationToken);
+        return Ok(response);
+    }
+
+    [HttpPost]  
+    public async Task<IActionResult> Update(UpdateRoleCommand request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(request, cancellationToken);
+        return Ok(response);
+    }
+
+    [HttpPost]  
+    public async Task<IActionResult> DeleteById(DeleteByIdRoleCommand request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken);
         return Ok(response);

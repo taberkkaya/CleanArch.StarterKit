@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArch.StarterKit.Infrastructure.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid,
+    IdentityUserClaim<Guid>, ApplicationUserRole, IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -68,11 +70,26 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         base.OnModelCreating(builder);
 
         // Kullanmadıklarını ignore et
-        builder.Ignore<IdentityUserToken<Guid>>();
-        builder.Ignore<IdentityUserLogin<Guid>>();
-        builder.Ignore<IdentityUserClaim<Guid>>();
-        builder.Ignore<IdentityRoleClaim<Guid>>();
+        //builder.Ignore<IdentityUserToken<Guid>>();
+        //builder.Ignore<IdentityUserLogin<Guid>>();
+        //builder.Ignore<IdentityUserClaim<Guid>>();
+        //builder.Ignore<IdentityRoleClaim<Guid>>();
         //builder.Ignore<IdentityUserRole<Guid>>();
+
+        builder.Entity<ApplicationUserRole>(userRole =>
+        {
+            userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            userRole.HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+
+            userRole.HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
+        });
 
         // Audit/soft delete query filter
         foreach (var entityType in builder.Model.GetEntityTypes())

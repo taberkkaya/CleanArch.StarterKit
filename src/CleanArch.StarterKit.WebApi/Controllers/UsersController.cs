@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.StarterKit.WebApi.Controllers;
 
-public sealed class UserController : ApiController
+public sealed class UsersController : ApiController
 {
-    public UserController(IMediator mediator) : base(mediator)
+    public UsersController(IMediator mediator) : base(mediator)
     {
     }
 
