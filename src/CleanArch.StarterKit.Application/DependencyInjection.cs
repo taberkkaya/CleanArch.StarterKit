@@ -17,7 +17,7 @@ public static class DependencyInjection
     {
         // Örnek: services.AddScoped<IService, Service>();
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssemblyContaining<RegisterUserCommandHandler>());
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         services.AddMapster();
 

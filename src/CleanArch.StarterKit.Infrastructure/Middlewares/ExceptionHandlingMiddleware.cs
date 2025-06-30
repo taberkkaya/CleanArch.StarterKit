@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using ResultKit;
 using Serilog;
 
 namespace CleanArch.StarterKit.Infrastructure.Middlewares;
@@ -23,6 +24,7 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             Log.Error(ex, "Unhandled exception occurred. Path: {Path}", context.Request.Path); // Serilog ile logla
+ 
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -31,11 +33,7 @@ public class ExceptionHandlingMiddleware
     {
         var code = HttpStatusCode.InternalServerError;
 
-        var result = JsonSerializer.Serialize(new
-        {
-            error = "Internal server error.",
-            traceId = context.TraceIdentifier
-        });
+        var result = JsonSerializer.Serialize(new Error(ErrorCodes.Conflict,exception.Message));
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;
