@@ -14,7 +14,7 @@ internal sealed class GetAllUserQueryHandler(
 {
     public async Task<Result<List<ApplicationUser>>> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
     {
-        var users = await userManager.Users.Include(p => p.UserRoles).ThenInclude(p => p.Role).ToListAsync();
+        var users = await userManager.Users.Include(p => p.Roles).ToListAsync();
         return users;
     }
 }

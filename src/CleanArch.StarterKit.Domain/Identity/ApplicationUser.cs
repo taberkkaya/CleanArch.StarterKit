@@ -6,9 +6,7 @@ namespace CleanArch.StarterKit.Domain.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>, IUserAuditable
 {
-    [NotMapped]
-    public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
-    public virtual ICollection<ApplicationRole> Roles => UserRoles.Select(ur => ur.Role).ToList();
+    public virtual ICollection<ApplicationRole> Roles { get; set; } = new List<ApplicationRole>();
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }

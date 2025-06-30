@@ -7,7 +7,7 @@ namespace CleanArch.StarterKit.Domain.Identity;
 public class ApplicationRole : IdentityRole<Guid>, IUserAuditable
 {
     [JsonIgnore]
-    public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
+    public virtual ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
