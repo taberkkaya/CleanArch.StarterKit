@@ -46,18 +46,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = userId ?? userName ?? "system";
+                    entry.Entity.CreatedBy = userId ?? userName ?? "SYSTEM";
                     entry.Entity.IsDeleted = false;
                     break;
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = userId ?? userName ?? "system";
+                    entry.Entity.UpdatedBy = userId ?? userName ?? "SYSTEM";
                     break;
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
                     entry.Entity.IsDeleted = true;
                     entry.Entity.DeletedAt = DateTime.UtcNow;
-                    entry.Entity.DeletedBy = userId ?? userName ?? "system";
+                    entry.Entity.DeletedBy = userId ?? userName ?? "SYSTEM";
                     break;
             }
         }
