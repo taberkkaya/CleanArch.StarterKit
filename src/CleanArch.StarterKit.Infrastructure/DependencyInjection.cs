@@ -1,6 +1,6 @@
 ﻿using CleanArch.StarterKit.Application.Repositories;
 using CleanArch.StarterKit.Application.Services;
-using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Domain.Entities.Identity;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using CleanArch.StarterKit.Infrastructure.Repositories;
 using CleanArch.StarterKit.Infrastructure.Services;

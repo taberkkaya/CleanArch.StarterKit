@@ -1,5 +1,5 @@
 ﻿using CleanArch.StarterKit.Application.Services;
-using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

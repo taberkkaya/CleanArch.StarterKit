@@ -15,7 +15,7 @@ public class DashboardPasswordHasher : IDashboardPasswordHasher
     /// <returns>The hashed password string.</returns>
     public string HashPassword(string password)
     {
-        return new PasswordHasher<object?>().HashPassword(null, password);
+        return new PasswordHasher<object>().HashPassword(null!, password);
     }
 
     /// <summary>
@@ -26,6 +26,6 @@ public class DashboardPasswordHasher : IDashboardPasswordHasher
     /// <returns>True if the password matches; otherwise, false.</returns>
     public bool VerifyHashedPassword(string hashedPassword, string providedPassword)
     {
-        return new PasswordHasher<object?>().VerifyHashedPassword(null, hashedPassword, providedPassword) != PasswordVerificationResult.Failed;
+        return new PasswordHasher<object>().VerifyHashedPassword(null!, hashedPassword, providedPassword) != PasswordVerificationResult.Failed;
     }
 }

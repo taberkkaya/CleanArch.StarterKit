@@ -1,42 +1,43 @@
-﻿namespace CleanArch.StarterKit.Domain.Entities;
+﻿namespace CleanArch.StarterKit.Domain.Abstractions;
 
 /// <summary>
-/// Defines properties for tracking audit information on entities.
+/// Represents a base entity that includes audit metadata for create, update, and delete operations.
 /// </summary>
-public interface IUserAuditable
+/// <typeparam name="TKey">The type of the entity's identifier.</typeparam>
+public abstract class AuditableEntity<TKey> : BaseEntity<TKey>, IUserAuditable
 {
     /// <summary>
     /// The date and time when the entity was created.
     /// </summary>
-    DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// The identifier of the user who created the entity.
     /// </summary>
-    string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
     /// <summary>
     /// The date and time when the entity was last updated.
     /// </summary>
-    DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
     /// The identifier of the user who last updated the entity.
     /// </summary>
-    string? UpdatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
     /// <summary>
     /// The date and time when the entity was deleted.
     /// </summary>
-    DateTime? DeletedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
     /// <summary>
     /// The identifier of the user who deleted the entity.
     /// </summary>
-    string? DeletedBy { get; set; }
+    public string? DeletedBy { get; set; }
 
     /// <summary>
     /// Indicates whether the entity has been marked as deleted.
     /// </summary>
-    bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 }

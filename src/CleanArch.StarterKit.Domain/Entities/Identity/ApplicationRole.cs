@@ -1,45 +1,45 @@
-﻿using CleanArch.StarterKit.Domain.Entities;
+﻿using CleanArch.StarterKit.Domain.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArch.StarterKit.Domain.Identity;
+namespace CleanArch.StarterKit.Domain.Entities.Identity;
 
 /// <summary>
-/// Represents an application user with audit metadata.
+/// Represents an application role with audit metadata.
 /// </summary>
-public class ApplicationUser : IdentityUser<Guid>, IUserAuditable
+public class ApplicationRole : IdentityRole<Guid>, IUserAuditable
 {
     /// <summary>
-    /// The date and time when the user was created.
+    /// The date and time when the role was created.
     /// </summary>
     public DateTime CreatedAt { get; set; }
 
     /// <summary>
-    /// The identifier of the user who created this record.
+    /// The identifier of the user who created the role.
     /// </summary>
     public string? CreatedBy { get; set; }
 
     /// <summary>
-    /// The date and time when the user was last updated.
+    /// The date and time when the role was last updated.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
-    /// The identifier of the user who last updated this record.
+    /// The identifier of the user who last updated the role.
     /// </summary>
     public string? UpdatedBy { get; set; }
 
     /// <summary>
-    /// The date and time when the user was deleted.
+    /// The date and time when the role was deleted.
     /// </summary>
     public DateTime? DeletedAt { get; set; }
 
     /// <summary>
-    /// The identifier of the user who deleted this record.
+    /// The identifier of the user who deleted the role.
     /// </summary>
     public string? DeletedBy { get; set; }
 
     /// <summary>
-    /// Indicates whether the user has been marked as deleted.
+    /// Indicates whether the role has been marked as deleted.
     /// </summary>
     public bool IsDeleted { get; set; }
 }

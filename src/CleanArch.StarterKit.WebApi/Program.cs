@@ -1,5 +1,5 @@
 ﻿using CleanArch.StarterKit.Application;
-using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Domain.Entities.Identity;
 using CleanArch.StarterKit.Infrastructure;
 using CleanArch.StarterKit.Infrastructure.Extensions;
 using CleanArch.StarterKit.Infrastructure.Filters;

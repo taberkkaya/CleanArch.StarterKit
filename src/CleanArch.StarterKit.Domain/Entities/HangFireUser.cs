@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a Hangfire dashboard user with credentials and activation status.
 /// </summary>
-public class HangfireDashboardUser
+public class HangFireUser
 {
     /// <summary>
     /// The unique identifier of the user.

@@ -27,7 +27,7 @@ public class BasicAuthAuthorizationFilter : IDashboardAuthorizationFilter
                 var scopeFactory = httpContext.RequestServices.GetService<IServiceScopeFactory>();
                 using var scope = scopeFactory!.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var user = dbContext.HangfireDashboardUsers.FirstOrDefault(u => u.UserName == username && u.IsActive);
+                var user = dbContext.HangFireUsers.FirstOrDefault(u => u.UserName == username && u.IsActive);
 
                 if (user != null)
                 {

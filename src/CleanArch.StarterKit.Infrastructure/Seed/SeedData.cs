@@ -1,5 +1,5 @@
 ﻿using CleanArch.StarterKit.Domain.Entities;
-using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Domain.Entities.Identity;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using CleanArch.StarterKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -55,9 +55,9 @@ public static class SeedData
 
         #region HangfireUser
         var hasher = new DashboardPasswordHasher();
-        if (!dbContext.HangfireDashboardUsers.Any(u => u.UserName == "hangfire-admin"))
+        if (!dbContext.HangFireUsers.Any(u => u.UserName == "hangfire-admin"))
         {
-            dbContext.HangfireDashboardUsers.Add(new HangfireDashboardUser
+            dbContext.HangFireUsers.Add(new HangFireUser
             {
                 UserName = "hangfire-admin",
                 PasswordHash = hasher.HashPassword("Hanfire123*")

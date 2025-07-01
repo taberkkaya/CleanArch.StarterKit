@@ -1,6 +1,7 @@
 ﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Domain.Abstractions;
 using CleanArch.StarterKit.Domain.Entities;
-using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Domain.Entities.Identity;
 using CleanArch.StarterKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RepositoryKit.Core.Interfaces;
 using RepositoryKit.EntityFramework.Implementations;
+using System.Reflection.Emit;
 using System.Security.Claims;
 
 namespace CleanArch.StarterKit.Infrastructure.Persistence;
@@ -28,7 +30,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // DbSets
     public DbSet<AuditLog> AuditLogs { get; set; }
-    public DbSet<HangfireDashboardUser> HangfireDashboardUsers { get; set; }
+    public DbSet<HangFireUser> HangFireUsers { get; set; }
 
     public override int SaveChanges()
     {
@@ -85,6 +87,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Ignore<IdentityUserClaim<Guid>>();
         builder.Ignore<IdentityRoleClaim<Guid>>();
         // builder.Ignore<IdentityUserRole<Guid>>();
+
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         // Configure global query filter for soft deletes
         foreach (var entityType in builder.Model.GetEntityTypes())

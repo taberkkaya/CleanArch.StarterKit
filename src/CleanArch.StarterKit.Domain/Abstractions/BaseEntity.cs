@@ -1,4 +1,4 @@
-﻿namespace CleanArch.StarterKit.Domain.Entities;
+﻿namespace CleanArch.StarterKit.Domain.Abstractions;
 
 /// <summary>
 /// Represents the base class for all entities with an identifier.
@@ -9,5 +9,5 @@ public abstract class BaseEntity<TKey>
     /// <summary>
     /// The unique identifier for the entity.
     /// </summary>
-    public TKey Id { get; set; }
+    public TKey Id { get; set; } = default!;
 }

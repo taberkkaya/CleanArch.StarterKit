@@ -6,6 +6,6 @@ namespace CleanArch.StarterKit.Application.Repositories;
 /// <summary>
 /// Repository interface for managing Hangfire dashboard user entities.
 /// </summary>
-public interface IHangfireDashboardUsersRepository : IRepository<HangfireDashboardUser>
+public interface IHangfireDashboardUsersRepository : IRepository<HangFireUser>
 {
 }

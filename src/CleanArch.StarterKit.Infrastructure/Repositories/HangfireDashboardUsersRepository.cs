@@ -9,7 +9,7 @@ namespace CleanArch.StarterKit.Infrastructure.Repositories;
 /// Entity Framework repository implementation for managing Hangfire dashboard users.
 /// </summary>
 internal sealed class HangfireDashboardUsersRepository
-    : EfRepository<HangfireDashboardUser, ApplicationDbContext>, IHangfireDashboardUsersRepository
+    : EfRepository<HangFireUser, ApplicationDbContext>, IHangfireDashboardUsersRepository
 {
     public HangfireDashboardUsersRepository(ApplicationDbContext context)
         : base(context)

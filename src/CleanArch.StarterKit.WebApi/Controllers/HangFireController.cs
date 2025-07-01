@@ -8,9 +8,9 @@ namespace CleanArch.StarterKit.WebApi.Controllers;
 /// <summary>
 /// Controller for managing Hangfire dashboard users.
 /// </summary>
-public class HangfireDashboardUsersController : ApiController
+public class HangFireController : ApiController
 {
-    public HangfireDashboardUsersController(IMediator mediator) : base(mediator)
+    public HangFireController(IMediator mediator) : base(mediator)
     {
     }
 
@@ -18,7 +18,7 @@ public class HangfireDashboardUsersController : ApiController
     /// Creates a new Hangfire dashboard user.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create(CreateHangfireDashboardUsersRepositoryCommand request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateUser(CreateUserRepositoryCommand request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken);
         return Ok(response);
