@@ -31,6 +31,17 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Host.UseSerilog(logger);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+
 // Db ve DI
 builder.Services.AddApplication(); // Sadece MediatR ve Service
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection")!);
@@ -129,6 +140,9 @@ app.UseExceptionHandling();
 
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll"); // UseAuthorization'dan önce
+
 app.UseAuthentication(); // Sırası önemli!
 app.UseAuthorization();
 
