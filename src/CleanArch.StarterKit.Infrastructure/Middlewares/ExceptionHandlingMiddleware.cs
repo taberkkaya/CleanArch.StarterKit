@@ -6,6 +6,9 @@ using Serilog;
 
 namespace CleanArch.StarterKit.Infrastructure.Middlewares;
 
+/// <summary>
+/// Middleware that handles unhandled exceptions globally and returns a standardized JSON error response.
+/// </summary>
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -23,8 +26,9 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Unhandled exception occurred. Path: {Path}", context.Request.Path); // Serilog ile logla
- 
+            // Log the exception with Serilog
+            Log.Error(ex, "Unhandled exception occurred. Path: {Path}", context.Request.Path);
+
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -33,7 +37,7 @@ public class ExceptionHandlingMiddleware
     {
         var code = HttpStatusCode.InternalServerError;
 
-        var result = JsonSerializer.Serialize(new Error(ErrorCodes.Conflict,exception.Message));
+        var result = JsonSerializer.Serialize(new Error(ErrorCodes.Conflict, exception.Message));
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;

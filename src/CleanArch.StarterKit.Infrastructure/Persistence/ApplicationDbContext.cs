@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RepositoryKit.Core.Interfaces;
 using RepositoryKit.EntityFramework.Implementations;
 using System.Security.Claims;
 
 namespace CleanArch.StarterKit.Infrastructure.Persistence;
 
+/// <summary>
+/// The application's Entity Framework Core DbContext, integrating Identity, soft deletes, and audit logging.
+/// </summary>
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IUnitOfWork<ApplicationDbContext>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IAuditLogService _auditLogService;
+
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
         IHttpContextAccessor httpContextAccessor) : base(options)
@@ -24,10 +26,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         _httpContextAccessor = httpContextAccessor;
     }
 
-    //  DbSet 
+    // DbSets
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<HangfireDashboardUser> HangfireDashboardUsers { get; set; }
-
 
     public override int SaveChanges()
     {
@@ -38,14 +39,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await AddAuditLogs();
+        AddAuditLogs();
         HandleAuditAndSoftDelete();
         return await base.SaveChangesAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Handles audit fields and implements soft delete behavior.
+    /// </summary>
     private void HandleAuditAndSoftDelete()
     {
-        // Kullanıcı adı/id’si
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
         var userName = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
@@ -76,14 +79,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         base.OnModelCreating(builder);
 
-        // Kullanmadıklarını ignore et
+        // Ignore Identity entities you do not use
         builder.Ignore<IdentityUserToken<Guid>>();
         builder.Ignore<IdentityUserLogin<Guid>>();
         builder.Ignore<IdentityUserClaim<Guid>>();
         builder.Ignore<IdentityRoleClaim<Guid>>();
-        //builder.Ignore<IdentityUserRole<Guid>>();
+        // builder.Ignore<IdentityUserRole<Guid>>();
 
-        // Audit/soft delete query filter
+        // Configure global query filter for soft deletes
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
             if (typeof(IUserAuditable).IsAssignableFrom(entityType.ClrType))
@@ -97,22 +100,29 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         }
     }
 
+    /// <summary>
+    /// Sets a global query filter to exclude soft-deleted entities.
+    /// </summary>
     private static void SetSoftDeleteQueryFilter<TEntity>(ModelBuilder builder)
         where TEntity : class, IUserAuditable
     {
         builder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
     }
 
-    private async Task AddAuditLogs()
+    /// <summary>
+    /// Creates audit logs for tracked entity changes.
+    /// </summary>
+    private void AddAuditLogs()
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
         var userName = _httpContextAccessor.HttpContext?.User.Identity?.Name ?? "Anonymous";
         var ip = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
         foreach (var entry in ChangeTracker.Entries()
-            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted).ToList())
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted)
+            .ToList())
         {
-            // Sadece asıl entity'ler için (ör: audit log kaydının kendisi olmasın)
+            // Skip audit log entries themselves
             if (entry.Entity is AuditLog) continue;
 
             var tableName = entry.Entity.GetType().Name;
@@ -141,11 +151,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
                 TableName = tableName,
                 OldValues = oldValues,
                 NewValues = newValues,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             });
         }
     }
 
+    /// <summary>
+    /// Returns a repository instance for the specified entity type.
+    /// </summary>
     public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
     {
         return new EfRepository<TEntity, ApplicationDbContext>(this);

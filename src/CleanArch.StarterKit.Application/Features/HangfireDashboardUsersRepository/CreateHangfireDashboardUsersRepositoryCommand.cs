@@ -7,12 +7,21 @@ using RepositoryKit.Core.Interfaces;
 using ResultKit;
 
 namespace CleanArch.StarterKit.Application.Features.HangfireDashboardUsersRepository;
+
+/// <summary>
+/// Command to create a new Hangfire dashboard user with the specified username and password.
+/// </summary>
 public sealed class CreateHangfireDashboardUsersRepositoryCommand : IRequest<Result<string>>
 {
     public string UserName { get; set; } = default!;
     public string Password { get; set; } = default!;
 }
 
+/// <summary>
+/// Handler that processes the creation of a new Hangfire dashboard user.
+/// It hashes the password, maps the command data to the entity,
+/// saves the entity to the repository, and commits the transaction.
+/// </summary>
 internal sealed class CreateHangfireDashboardUsersRepositoryCommandHandler(
     IHangfireDashboardUsersRepository dashboardUsersRepository,
     IDashboardPasswordHasher hasher,
@@ -25,9 +34,9 @@ internal sealed class CreateHangfireDashboardUsersRepositoryCommandHandler(
         var dashboardUser = request.Adapt<HangfireDashboardUser>();
         dashboardUser.PasswordHash = hashedPassword;
 
-        await dashboardUsersRepository.AddAsync(dashboardUser,cancellationToken);
+        await dashboardUsersRepository.AddAsync(dashboardUser, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return "Hangfire admin eklendi.";
+        return "Hangfire dashboard user was added successfully.";
     }
 }

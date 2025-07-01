@@ -2,18 +2,28 @@
 using CleanArch.StarterKit.Domain.Identity;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using CleanArch.StarterKit.Infrastructure.Services;
-using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace CleanArch.StarterKit.Infrastructure.Seed;
 
+/// <summary>
+/// Provides methods to seed initial data such as default users, roles, and Hangfire dashboard credentials.
+/// </summary>
 public static class SeedData
 {
-    public static async Task SeedAsync(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    /// <summary>
+    /// Seeds initial users, roles, and Hangfire dashboard users if they do not already exist.
+    /// </summary>
+    /// <param name="dbContext">The application database context.</param>
+    /// <param name="userManager">The ASP.NET Identity user manager.</param>
+    /// <param name="roleManager">The ASP.NET Identity role manager.</param>
+    public static async Task SeedAsync(
+        ApplicationDbContext dbContext,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<ApplicationRole> roleManager)
     {
         #region ApplicationUser
-        var roles = new List<string>() { "admin", "developer" };
+        var roles = new List<string> { "admin", "developer" };
         foreach (var role in roles)
         {
             if (!await roleManager.RoleExistsAsync(role))
@@ -55,6 +65,5 @@ public static class SeedData
             dbContext.SaveChanges();
         }
         #endregion
-
     }
 }

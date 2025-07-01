@@ -6,8 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using ResultKit;
 
 namespace CleanArch.StarterKit.Application.Features.Identity.Roles;
+
+/// <summary>
+/// Query to retrieve all roles from the system.
+/// </summary>
 public sealed record GetAllRolesQuery() : IRequest<Result<List<ApplicationRole>>>;
 
+/// <summary>
+/// Handler that fetches all application roles, optionally using cached data,
+/// and caches the result if not already cached.
+/// </summary>
 internal sealed class GetAllRolesQueryHandler(
     RoleManager<ApplicationRole> roleManager,
     ICacheService cacheService

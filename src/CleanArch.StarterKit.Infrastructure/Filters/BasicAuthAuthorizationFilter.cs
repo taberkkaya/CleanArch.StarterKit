@@ -1,15 +1,13 @@
-﻿// src/CleanArch.StarterKit.Infrastructure/Filters/HangfireDashboardAuthorizationFilter.cs
-
-using CleanArch.StarterKit.Application.Services;
+﻿using CleanArch.StarterKit.Application.Services;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using Hangfire.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArch.StarterKit.Infrastructure.Filters;
 
-// Infrastructure/Filters/BasicAuthAuthorizationFilter.cs
-
-
+/// <summary>
+/// Provides Basic Authentication authorization for Hangfire Dashboard access.
+/// </summary>
 public class BasicAuthAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize(DashboardContext context)
@@ -26,9 +24,8 @@ public class BasicAuthAuthorizationFilter : IDashboardAuthorizationFilter
                 var username = parts[0];
                 var password = parts[1];
 
-                // DbContext'le db'den kullanıcıyı çek
                 var scopeFactory = httpContext.RequestServices.GetService<IServiceScopeFactory>();
-                using var scope = scopeFactory.CreateScope();
+                using var scope = scopeFactory!.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var user = dbContext.HangfireDashboardUsers.FirstOrDefault(u => u.UserName == username && u.IsActive);
 

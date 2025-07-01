@@ -14,14 +14,23 @@ using RepositoryKit.Core.Interfaces;
 
 namespace CleanArch.StarterKit.Infrastructure;
 
+/// <summary>
+/// Provides extension methods to register infrastructure-layer dependencies.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Registers infrastructure services, including DbContext, Identity, caching, health checks, and custom services.
+    /// </summary>
+    /// <param name="services">The service collection to add dependencies to.</param>
+    /// <param name="connectionString">The database connection string.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString)); // veya UseNpgsql, UseSqlite
+            options.UseSqlServer(connectionString)); // or UseNpgsql, UseSqlite
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
 

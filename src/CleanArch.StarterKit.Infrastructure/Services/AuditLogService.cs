@@ -6,6 +6,10 @@ using System.Security.Claims;
 using System.Text.Json;
 
 namespace CleanArch.StarterKit.Infrastructure.Services;
+
+/// <summary>
+/// Service for recording audit logs into the database.
+/// </summary>
 public class AuditLogService : IAuditLogService
 {
     private readonly ApplicationDbContext _dbContext;
@@ -17,6 +21,13 @@ public class AuditLogService : IAuditLogService
         _httpContextAccessor = httpContextAccessor;
     }
 
+    /// <summary>
+    /// Writes an audit log entry to the database.
+    /// </summary>
+    /// <param name="action">The action performed (e.g., Create, Update, Delete).</param>
+    /// <param name="table">The name of the table affected.</param>
+    /// <param name="oldValues">Optional old values as an object.</param>
+    /// <param name="newValues">Optional new values as an object.</param>
     public async Task LogAsync(string action, string table, object? oldValues, object? newValues)
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
