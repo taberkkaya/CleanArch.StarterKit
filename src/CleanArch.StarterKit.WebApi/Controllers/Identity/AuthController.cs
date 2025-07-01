@@ -46,7 +46,7 @@ public class AuthController : ApiController
     }
 
     [AllowAnonymous]
-    [HttpPost("forgotpassword")]
+    [HttpPost]
     public async Task<IActionResult> ForgotPassword([FromBody] ResetPasswordRequestCommand command)
     {
         var result = await _mediator.Send(command);
@@ -54,7 +54,7 @@ public class AuthController : ApiController
     }
 
     [AllowAnonymous]
-    [HttpPost("resetpassword")]
+    [HttpPost]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
     {
         var result = await _mediator.Send(command);

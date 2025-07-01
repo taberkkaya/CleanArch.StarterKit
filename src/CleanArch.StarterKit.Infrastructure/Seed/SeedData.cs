@@ -1,11 +1,16 @@
-﻿using CleanArch.StarterKit.Domain.Identity;
+﻿using CleanArch.StarterKit.Domain.Entities;
+using CleanArch.StarterKit.Domain.Identity;
+using CleanArch.StarterKit.Infrastructure.Persistence;
+using CleanArch.StarterKit.Infrastructure.Services;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArch.StarterKit.Infrastructure.Seed;
 
 public static class SeedData
 {
-    public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    public static async Task SeedAsync(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         // Admin rolü varsa geç
         var adminRoleName = "Admin";
@@ -32,5 +37,17 @@ public static class SeedData
                 await userManager.AddToRoleAsync(adminUser, adminRoleName);
             }
         }
+
+        var hasher = new DashboardPasswordHasher();
+        if (!dbContext.HangfireDashboardUsers.Any(u => u.UserName == "admin"))
+        {
+            dbContext.HangfireDashboardUsers.Add(new HangfireDashboardUser
+            {
+                UserName = "admin",
+                PasswordHash = hasher.HashPassword("admin123")
+            });
+            dbContext.SaveChanges();
+        }
+
     }
 }

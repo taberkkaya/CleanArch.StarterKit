@@ -12,7 +12,7 @@ public class AuditLogCleanupJob
     // 30 günden eski logları silen örnek
     public async Task CleanOldLogsAsync()
     {
-        var cutoff = DateTime.UtcNow.AddMinutes(-30);
+        var cutoff = DateTime.UtcNow.AddDays(-30);
         var oldLogs = _context.AuditLogs.Where(x => x.Timestamp < cutoff);
         _context.AuditLogs.RemoveRange(oldLogs);
         await _context.SaveChangesAsync();

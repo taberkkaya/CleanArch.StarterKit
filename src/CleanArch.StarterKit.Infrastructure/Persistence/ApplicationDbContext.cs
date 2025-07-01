@@ -7,24 +7,27 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using RepositoryKit.Core.Interfaces;
+using RepositoryKit.EntityFramework.Implementations;
 using System.Security.Claims;
 
 namespace CleanArch.StarterKit.Infrastructure.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IUnitOfWork<ApplicationDbContext>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    private readonly IAuditLogService _auditLogService;
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        IHttpContextAccessor httpContextAccessor
-    ) : base(options)
+        IHttpContextAccessor httpContextAccessor) : base(options)
     {
         _httpContextAccessor = httpContextAccessor;
     }
 
     //  DbSet 
     public DbSet<AuditLog> AuditLogs { get; set; }
+    public DbSet<HangfireDashboardUser> HangfireDashboardUsers { get; set; }
+
 
     public override int SaveChanges()
     {
@@ -35,7 +38,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        AddAuditLogs();
+        await AddAuditLogs();
         HandleAuditAndSoftDelete();
         return await base.SaveChangesAsync(cancellationToken);
     }
@@ -100,7 +103,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
     }
 
-    private void AddAuditLogs()
+    private async Task AddAuditLogs()
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
         var userName = _httpContextAccessor.HttpContext?.User.Identity?.Name ?? "Anonymous";
@@ -138,9 +141,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
                 TableName = tableName,
                 OldValues = oldValues,
                 NewValues = newValues,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             });
         }
     }
 
+    public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+    {
+        return new EfRepository<TEntity, ApplicationDbContext>(this);
+    }
 }

@@ -25,7 +25,6 @@ public class AuditLogService : IAuditLogService
 
         var auditLog = new AuditLog
         {
-            Id = Guid.NewGuid(),
             UserId = userId,
             UserName = userName,
             Action = action,
@@ -33,7 +32,7 @@ public class AuditLogService : IAuditLogService
             OldValues = oldValues != null ? JsonSerializer.Serialize(oldValues) : null,
             NewValues = newValues != null ? JsonSerializer.Serialize(newValues) : null,
             IpAddress = ip,
-            Timestamp = DateTime.UtcNow
+            Timestamp = DateTime.Now
         };
 
         _dbContext.AuditLogs.Add(auditLog);

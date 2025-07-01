@@ -1,12 +1,16 @@
 ﻿using CleanArch.StarterKit.Application;
+using CleanArch.StarterKit.Domain.Entities;
 using CleanArch.StarterKit.Domain.Identity;
 using CleanArch.StarterKit.Infrastructure;
 using CleanArch.StarterKit.Infrastructure.Extensions;
+using CleanArch.StarterKit.Infrastructure.Filters;
 using CleanArch.StarterKit.Infrastructure.Middlewares;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using CleanArch.StarterKit.Infrastructure.Seed;
+using CleanArch.StarterKit.Infrastructure.Services;
 using Hangfire;
 using HealthChecks.UI.Client;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -95,7 +99,8 @@ using (var scope = app.Services.CreateScope())
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-    await SeedData.SeedAsync(userManager, roleManager);
+    await SeedData.SeedAsync(context,userManager, roleManager);
+
 }
 
 if (app.Environment.IsDevelopment())
@@ -122,7 +127,11 @@ app.UseHealthChecksUI(options =>
     options.UIPath = "/health-ui";
 });
 
-app.UseHangfireDashboard("/jobs");
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new BasicAuthAuthorizationFilter() }
+});
+
 app.UseCustomHangfireJobs();
 
 app.MapControllers();

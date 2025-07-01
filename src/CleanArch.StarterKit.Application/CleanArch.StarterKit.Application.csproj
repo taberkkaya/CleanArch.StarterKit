@@ -7,6 +7,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+    <PackageReference Include="RepositoryKit.Core" Version="9.0.5" />
     <PackageReference Include="ResultKit" Version="9.0.2" />
   </ItemGroup>
 
