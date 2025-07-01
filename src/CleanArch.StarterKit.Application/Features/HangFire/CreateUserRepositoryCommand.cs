@@ -23,7 +23,7 @@ public sealed class CreateUserRepositoryCommand : IRequest<Result<string>>
 /// saves the entity to the repository, and commits the transaction.
 /// </summary>
 internal sealed class CreateHangfireDashboardUsersRepositoryCommandHandler(
-    IHangfireDashboardUsersRepository dashboardUsersRepository,
+    IHangFireUserRepository dashboardUsersRepository,
     IPasswordHasher hasher,
     IUnitOfWork unitOfWork
     ) : IRequestHandler<CreateUserRepositoryCommand, Result<string>>
