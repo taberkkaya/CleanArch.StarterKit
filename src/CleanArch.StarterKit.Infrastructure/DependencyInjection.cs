@@ -5,6 +5,9 @@ using CleanArch.StarterKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace CleanArch.StarterKit.Infrastructure;
 
@@ -24,6 +27,15 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddMemoryCache();
 
+        // Health Checks
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>("DbContext")
+            .AddSqlServer(connectionString, name : "SqlServer");
+
+        services.AddHealthChecksUI()
+            .AddInMemoryStorage();
+
+        // Custom Services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<ICacheService, MemoryCacheService>();
         services.AddScoped<IEmailService, SmtpEmailService>();

@@ -1,15 +1,20 @@
-﻿using System.Text;
-using CleanArch.StarterKit.Application;
+﻿using CleanArch.StarterKit.Application;
 using CleanArch.StarterKit.Domain.Identity;
 using CleanArch.StarterKit.Infrastructure;
+using CleanArch.StarterKit.Infrastructure.Extensions;
 using CleanArch.StarterKit.Infrastructure.Middlewares;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using CleanArch.StarterKit.Infrastructure.Seed;
+using Hangfire;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +81,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCustomHangfireJobs(builder.Configuration.GetConnectionString("DefaultConnection") ?? "");
+
 
 var app = builder.Build();
 
@@ -105,6 +112,18 @@ app.UseAuthentication(); // Sırası önemli!
 app.UseAuthorization();
 
 app.UseAuditLogging();
+
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.UseHealthChecksUI(options =>
+{
+    options.UIPath = "/health-ui";
+});
+
+app.UseHangfireDashboard("/jobs");
+app.UseCustomHangfireJobs();
 
 app.MapControllers();
 app.Run();
