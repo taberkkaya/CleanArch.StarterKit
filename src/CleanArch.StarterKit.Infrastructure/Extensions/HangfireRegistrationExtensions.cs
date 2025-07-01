@@ -1,4 +1,4 @@
-﻿using CleanArch.StarterKit.Infrastructure.BackgroundJobs;
+﻿using CleanArch.StarterKit.Infrastructure.CronJobs;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

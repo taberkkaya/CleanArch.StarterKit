@@ -1,6 +1,6 @@
 ﻿using CleanArch.StarterKit.Infrastructure.Persistence;
 
-namespace CleanArch.StarterKit.Infrastructure.BackgroundJobs;
+namespace CleanArch.StarterKit.Infrastructure.CronJobs;
 
 /// <summary>
 /// Background job that cleans up old audit log entries.
