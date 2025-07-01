@@ -12,42 +12,49 @@ public static class SeedData
 {
     public static async Task SeedAsync(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
-        // Admin rolü varsa geç
-        var adminRoleName = "Admin";
-        if (!await roleManager.RoleExistsAsync(adminRoleName))
+        #region ApplicationUser
+        var roles = new List<string>() { "admin", "developer" };
+        foreach (var role in roles)
         {
-            await roleManager.CreateAsync(new ApplicationRole { Name = adminRoleName });
+            if (!await roleManager.RoleExistsAsync(role))
+                await roleManager.CreateAsync(new ApplicationRole { Name = role });
         }
 
-        // Admin kullanıcı varsa geç
-        var adminEmail = "admin@admin.com";
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
+        var email = "system@system.com";
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
         {
-            adminUser = new ApplicationUser
+            user = new ApplicationUser
             {
-                UserName = "admin",
-                Email = adminEmail,
+                UserName = "system",
+                Email = email,
                 EmailConfirmed = true
             };
 
-            var result = await userManager.CreateAsync(adminUser, "Admin123*"); // şifreyi istediğin gibi değiştirebilirsin
+            var result = await userManager.CreateAsync(user, "System123*");
+
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(adminUser, adminRoleName);
+                foreach (var role in roles)
+                {
+                    await userManager.AddToRoleAsync(user, role);
+                }
             }
         }
+        #endregion
 
+        #region HangfireUser
         var hasher = new DashboardPasswordHasher();
-        if (!dbContext.HangfireDashboardUsers.Any(u => u.UserName == "admin"))
+        if (!dbContext.HangfireDashboardUsers.Any(u => u.UserName == "hangfire-admin"))
         {
             dbContext.HangfireDashboardUsers.Add(new HangfireDashboardUser
             {
-                UserName = "admin",
-                PasswordHash = hasher.HashPassword("admin123")
+                UserName = "hangfire-admin",
+                PasswordHash = hasher.HashPassword("Hanfire123*")
             });
             dbContext.SaveChanges();
         }
+        #endregion
 
     }
 }
