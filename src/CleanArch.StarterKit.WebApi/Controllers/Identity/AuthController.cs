@@ -65,7 +65,7 @@ public class AuthController : ApiController
     /// </summary>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> ForgotPassword([FromBody] ResetPasswordRequestCommand command)
+    public async Task<IActionResult> SendResetPasswordEmail([FromBody] SendResetPasswordEmailCommand command)
     {
         var result = await _mediator.Send(command);
         return result.IsSuccess

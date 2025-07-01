@@ -2,6 +2,7 @@
 using CleanArch.StarterKit.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using ResultKit;
 
 namespace CleanArch.StarterKit.Application.Features.Identity.Auth;
@@ -9,7 +10,7 @@ namespace CleanArch.StarterKit.Application.Features.Identity.Auth;
 /// <summary>
 /// Command to request a password reset link for a user identified by email.
 /// </summary>
-public sealed record ResetPasswordRequestCommand(
+public sealed record SendResetPasswordEmailCommand(
     string Email) : IRequest<Result<string>>;
 
 /// <summary>
@@ -17,9 +18,10 @@ public sealed record ResetPasswordRequestCommand(
 /// </summary>
 internal sealed class ResetPasswordRequestCommandHandler(
     UserManager<ApplicationUser> userManager,
-    IEmailService emailService) : IRequestHandler<ResetPasswordRequestCommand, Result<string>>
+    IEmailService emailService,
+    IConfiguration configuration) : IRequestHandler<SendResetPasswordEmailCommand, Result<string>>
 {
-    public async Task<Result<string>> Handle(ResetPasswordRequestCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(SendResetPasswordEmailCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
@@ -30,8 +32,8 @@ internal sealed class ResetPasswordRequestCommandHandler(
         // Make token URL-safe
         var urlToken = Uri.EscapeDataString(token);
 
-        // Put your application's frontend URL here
-        var resetLink = $"https://localhost:7294/api/auth/resetpassword?userId={user.Id}&token={urlToken}";
+        var baseUrl = configuration["App:BaseUrl"];
+        var resetLink = $"{baseUrl}/api/auth/resetpassword?userId={user.Id}&token={urlToken}";
 
         await emailService.SendAsync(
             user.Email!,
