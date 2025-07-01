@@ -14,10 +14,12 @@ using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,6 +89,17 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddCustomHangfireJobs(builder.Configuration.GetConnectionString("DefaultConnection") ?? "");
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", config =>
+    {
+        config.Window = TimeSpan.FromSeconds(10);  // Her 10 saniyede bir pencere
+        config.PermitLimit = 5;                    // 10 sn içinde max 5 istek
+        config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        config.QueueLimit = 2;                     // Fazla istekten 2 tanesini kuyruğa al
+    });
+});
+
 
 var app = builder.Build();
 
@@ -95,12 +108,15 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
+
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-    await SeedData.SeedAsync(context,userManager, roleManager);
-
+    await SeedData.SeedAsync(context, userManager, roleManager);
 }
 
 if (app.Environment.IsDevelopment())
@@ -134,5 +150,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 
 app.UseCustomHangfireJobs();
 
-app.MapControllers();
+app.UseRateLimiter();
+
+app.MapControllers()
+     .RequireRateLimiting("fixed");  // Tüm controllera uygula;
 app.Run();
