@@ -6,7 +6,7 @@ namespace CleanArch.StarterKit.Infrastructure.Services;
 /// <summary>
 /// Provides password hashing and verification for Hangfire dashboard users.
 /// </summary>
-public class DashboardPasswordHasher : IDashboardPasswordHasher
+public class PasswordHasher : IPasswordHasher
 {
     /// <summary>
     /// Generates a hashed representation of the provided password.

@@ -54,7 +54,7 @@ public static class SeedData
         #endregion
 
         #region HangfireUser
-        var hasher = new DashboardPasswordHasher();
+        var hasher = new PasswordHasher();
         if (!dbContext.HangFireUsers.Any(u => u.UserName == "hangfire-admin"))
         {
             dbContext.HangFireUsers.Add(new HangFireUser

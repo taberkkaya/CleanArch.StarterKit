@@ -3,7 +3,7 @@
 /// <summary>
 /// Service for hashing and verifying dashboard user passwords.
 /// </summary>
-public interface IDashboardPasswordHasher
+public interface IPasswordHasher
 {
     /// <summary>
     /// Generates a hashed representation of the provided password.

@@ -31,7 +31,7 @@ public class BasicAuthAuthorizationFilter : IDashboardAuthorizationFilter
 
                 if (user != null)
                 {
-                    var hasher = scope.ServiceProvider.GetRequiredService<IDashboardPasswordHasher>();
+                    var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
                     if (hasher.VerifyHashedPassword(user.PasswordHash, password))
                         return true;
                 }

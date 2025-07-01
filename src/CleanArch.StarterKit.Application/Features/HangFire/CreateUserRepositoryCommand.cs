@@ -24,7 +24,7 @@ public sealed class CreateUserRepositoryCommand : IRequest<Result<string>>
 /// </summary>
 internal sealed class CreateHangfireDashboardUsersRepositoryCommandHandler(
     IHangfireDashboardUsersRepository dashboardUsersRepository,
-    IDashboardPasswordHasher hasher,
+    IPasswordHasher hasher,
     IUnitOfWork unitOfWork
     ) : IRequestHandler<CreateUserRepositoryCommand, Result<string>>
 {
