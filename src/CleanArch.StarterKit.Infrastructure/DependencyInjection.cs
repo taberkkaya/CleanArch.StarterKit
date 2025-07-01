@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RepositoryKit.Core.Interfaces;
+using Scrutor;
+using System.Reflection;
 
 namespace CleanArch.StarterKit.Infrastructure;
 
@@ -49,13 +51,16 @@ public static class DependencyInjection
         services.AddHealthChecksUI()
             .AddInMemoryStorage();
 
-        // Custom Services
-        services.AddScoped<IJwtTokenService, JwtTokenService>();
-        services.AddScoped<ICacheService, MemoryCacheService>();
-        services.AddScoped<IEmailService, SmtpEmailService>();
-        services.AddScoped<IAuditLogService, AuditLogService>();
-        services.AddScoped<IDashboardPasswordHasher, DashboardPasswordHasher>();
-        services.AddScoped<IHangfireDashboardUsersRepository, HangfireDashboardUsersRepository>();
+        services.Scan(action =>
+        {
+            action
+            .FromAssemblies(Assembly.GetExecutingAssembly())
+            .AddClasses(publicOnly: false)
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsMatchingInterface()
+            .AsImplementedInterfaces()
+            .WithScopedLifetime();
+        });
 
         return services;
     }

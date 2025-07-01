@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.6" />
     <PackageReference Include="RepositoryKit.EntityFramework" Version="9.0.4" />
+    <PackageReference Include="Scrutor" Version="6.1.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
   </ItemGroup>
 
