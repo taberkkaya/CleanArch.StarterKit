@@ -1,5 +1,5 @@
 ﻿using CleanArch.StarterKit.Application.Services;
-using CleanArch.StarterKit.Domain.Entities;
+using CleanArch.StarterKit.Domain.Entities.System;
 using CleanArch.StarterKit.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;

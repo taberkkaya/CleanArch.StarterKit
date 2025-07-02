@@ -1,4 +1,5 @@
 ﻿using CleanArch.StarterKit.Application.Services;
+using CleanArch.StarterKit.Application.Services.Identity;
 using CleanArch.StarterKit.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -19,8 +20,7 @@ public sealed record SendConfirmEmailCommand(
 /// </summary>
 internal sealed class SendConfirmEmailCommandHandler(
     UserManager<ApplicationUser> userManager,
-    IEmailService emailService,
-    IConfiguration configuration
+    IUserService userService
 ) : IRequestHandler<SendConfirmEmailCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(SendConfirmEmailCommand request, CancellationToken cancellationToken)
@@ -33,18 +33,8 @@ internal sealed class SendConfirmEmailCommandHandler(
         if (user.Email is null)
             return Result<string>.Failure(new Error(ErrorCodes.NotFound, "Email address not found."));
 
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var result = await userService.SendConfirmEmail(user);
 
-        var baseUrl = configuration["App:BaseUrl"];
-        var confirmationLink = $"{baseUrl}/api/Auth/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(token)}";
-
-        await emailService.SendAsync(
-            user.Email,
-            "Email Confirmation",
-            $"To confirm your email address, please <a href='{confirmationLink}'>click here</a>.",
-            true
-        );
-
-        return "Email confirmation message has been sent successfully.";
+        return result;
     }
 }

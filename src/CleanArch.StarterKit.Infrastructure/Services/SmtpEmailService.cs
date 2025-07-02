@@ -17,7 +17,7 @@ public class SmtpEmailService(IConfiguration configuration) : IEmailService
     /// <param name="subject">The email subject.</param>
     /// <param name="body">The email body content.</param>
     /// <param name="isHtml">Whether the body is HTML. Default is true.</param>
-    public async Task SendAsync(string to, string subject, string body, bool isHtml = true, List<string>? cc = null)
+    public async Task SendAsync(string to, string subject, string body, bool isHtml = true, List<string>? cc = null, CancellationToken cancellationToken = default)
     {
         var emailConfig = configuration.GetSection("Email");
 
@@ -44,6 +44,6 @@ public class SmtpEmailService(IConfiguration configuration) : IEmailService
             }
         }
 
-        await client.SendMailAsync(mailMessage);
+        await client.SendMailAsync(mailMessage,cancellationToken);
     }
 }

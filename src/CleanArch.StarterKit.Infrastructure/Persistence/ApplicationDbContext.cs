@@ -2,6 +2,7 @@
 using CleanArch.StarterKit.Domain.Abstractions;
 using CleanArch.StarterKit.Domain.Entities;
 using CleanArch.StarterKit.Domain.Entities.Identity;
+using CleanArch.StarterKit.Domain.Entities.System;
 using CleanArch.StarterKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

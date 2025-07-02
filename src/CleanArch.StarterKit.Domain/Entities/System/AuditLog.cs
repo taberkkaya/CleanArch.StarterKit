@@ -1,6 +1,6 @@
 ﻿using CleanArch.StarterKit.Domain.Abstractions;
 
-namespace CleanArch.StarterKit.Domain.Entities;
+namespace CleanArch.StarterKit.Domain.Entities.System;
 
 /// <summary>
 /// Represents an audit log entry for tracking changes or actions performed in the system.

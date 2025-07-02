@@ -13,5 +13,5 @@ public interface IEmailService
     /// <param name="body">The body content of the email.</param>
     /// <param name="isHtml">Indicates whether the body is HTML. Default is true.</param>
     /// <param name="cc">Optional list of CC recipients.</param>
-    Task SendAsync(string to, string subject, string body, bool isHtml = true, List<string>? cc = null);
+    Task SendAsync(string to, string subject, string body, bool isHtml = true, List<string>? cc = null,CancellationToken cancellationToken = default);
 }
