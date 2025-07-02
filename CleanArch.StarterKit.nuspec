@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>CleanArch.StarterKit</id>
+    <version>9.0.1</version>
+    <title>Clean Architecture Starter Kit</title>
+    <authors>Ataberk Kaya</authors>
+    <owners>Ataberk Kaya</owners>
+    <description>A project template for Clean Architecture with modern .NET technologies. Easily bootstrap your next .NET project with best practices.</description>
+    <releaseNotes>Initial release of the Clean Architecture Starter Kit template.</releaseNotes>
+    <language>en-US</language>
+    <projectUrl>https://github.com/taberkkaya/CleanArch.StarterKit</projectUrl>
+    <icon>assets/logo64x64.png</icon>
+    <repository type="git" url="https://github.com/taberkkaya/CleanArch.StarterKit"/>
+    <tags>dotnet-new clean-architecture template starterkit cqrs ddd</tags>    
+    <license type="file">LICENSE</license>
+    <readme>README.md</readme>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>    
+    <dependencies>
+      <!-- No dependencies -->
+    </dependencies>
+  </metadata>
+  <files>    
+    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\.git\**;**\.github\**;**\*.user;**\.vs\**;**\.vscode\**;**\.gitignore;**\sample\**;**\images\**" />
+    <file src="README.md" />
+    <file src="LICENSE" />
+     <file src="assets\logo64x64.png" target="assets\logo64x64.png" />
+  </files>
+</package>

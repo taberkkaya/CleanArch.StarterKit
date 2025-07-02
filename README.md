@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="./assets/logo.jpg" alt="CleanArch.StarterKit Logo" width="200" />
-</p>
-
-<h1 align="center">CleanArch.StarterKit</h1>
+<div align="center">
+  <img src="assets/logo-1250x1250.png" width="120" alt="ResultKit logo" />
+  <h1>CleanArch.StarterKit</h1>
+</div>
 
 <p align="center">
   🧱 A robust, modular, and enterprise-ready Clean Architecture template for .NET 9.
@@ -38,6 +37,32 @@ Designed for scalable, maintainable, and testable enterprise solutions.
 | HealthChecks & UI     | Health endpoints                 |
 | ResultKit             | Result/Error handling            |
 | RepositoryKit         | Generic repository pattern       |
+
+---
+
+
+## 🚀 Installation
+
+### 1️⃣ Install via NuGet as a Template (Recommended)
+
+You can install CleanArch.StarterKit as a dotnet template via NuGet:
+
+```bash
+dotnet new install CleanArch.StarterKit::9.0.1
+```
+
+After installation, create a new solution with:
+```bash
+dotnet new cleanarch-starterkit -n YourProjectName
+```
+
+### 2️⃣ Manual Clone
+Alternatively, you can clone the repository directly:
+
+```bash
+git clone https://github.com/taberkkaya/CleanArch.StarterKit.git
+cd CleanArch.StarterKit/src
+```
 
 ---
 
